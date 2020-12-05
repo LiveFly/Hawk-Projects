@@ -1,0 +1,32 @@
+<root>
+  <Doc Author="沙漠之鹰" Description="##  链家全国地产&#xA;&#xA;获取全国的链家房产数据，包括租房，买房，已成交等数据&#xA;可通过系统全局配置，设置城市类型，如北京，上海，杭州等。&#xA;欢迎联系Hawk作者：&#xA;&#xA;&gt; buptzym@qq.com&#xA;" ImgURL="https://upload-images.jianshu.io/upload_images/9608527-1d27979f9b2b7507.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" Name="链家全国地产" ParameterName="" PublishTime="2018/10/28 22:01:49" SavePath="D:\TopCoder\Hawk-Projects\Hawk3\搜狐新闻.xml" ShortDescription="获取全国的链家房产数据，包括租房，买房，已成交等数据" Version="0">
+    <DataCollections />
+    <DBConnections>
+      <Children AutoConnect="True" ConnectString="" DBName="" Name="最近打开的文件" TypeName="FileManager" />
+      <Children AutoConnect="True" ConnectString="data source=D:\TopCoder\Hawk-Projects\链家\lianjia.db" DBName="D:\TopCoder\Hawk-Projects\链家\lianjia.db" Name="SQLite数据库" TypeName="SQLiteDatabase" />
+      <Children AutoConnect="False" ConnectString="" DBName="hawk" Name="MongoDB连接器" TypeName="MongoDBConnector" />
+    </DBConnections>
+    <Parameters />
+    <RunningTasks />
+    <Children __KeppOrder="True" Children="System.Collections.Generic.List`1[Hawk.Core.Utils.Plugins.FreeDocument]" DelayTime="0" Description="任务描述" GenerateMode="SerialMode" MaxThreadCount="5" Name="栏目抓取" SampleMount="20" ScriptPath="" Type="SmartETLTool">
+      <Children Column="scene" Content="1460" Enabled="True" Group="Generator" MergeType="Cross" ObjectID="从文本生成_text_5" Type="TextGE" />
+      <Children Column="id" Enabled="True" Group="Generator" Interval="1" MaxValue="1000" MergeType="Cross" MinValue="1" ObjectID="生成区间数_id_1" Type="RangeGE" />
+      <Children Column="id" Enabled="True" Format="v2.sohu.com/public-api/feed?scene=CATEGORY&amp;sceneId=[scene]&amp;page={0}&amp;size=20" Group="Transformer" IsMultiYield="False" MergeWith="" NewColumn="" ObjectID="合并多列_id_2" OneOutput="True" ReferFormat="" Type="MergeTF" />
+      <Children Column="id" CrawlerSelector="网页采集器" Enabled="True" Group="Transformer" IsMultiYield="False" NewColumn="" ObjectID="从爬虫转换_id_5" OneOutput="False" Type="CrawlerTF" />
+      <Children Column="Content" Enabled="True" Group="Transformer" IsMultiYield="False" NewColumn="" ObjectID="转换为Json_Content_5" OneOutput="False" ScriptWorkMode="NoTransform" Type="JsonTF" />
+      <Children Column="Content" Enabled="True" Group="Transformer" IsMultiYield="False" NewColumn="len" ObjectID="Python转换器_Content_6" OneOutput="False" Script="len(value)" ScriptWorkMode="NoTransform" Type="PythonTF" />
+      <Children Column="len" Enabled="True" FilterWorkMode="StopWhenFail" Group="Filter" IsDebugFilter="True" Max="99999" Min="20" ObjectID="数值范围过滤器_len_7" Revert="False" Type="RangeFT" />
+      <Children Column="len" Enabled="True" FilterWorkMode="ByItem" Group="Filter" IsDebugFilter="True" Max="20" Min="20" ObjectID="数值范围过滤器_len_8" Revert="False" Type="RangeFT" />
+      <Children Column="Content" Enabled="True" Group="Transformer" IsMultiYield="True" NewColumn="" ObjectID="Python转换器_Content_9" OneOutput="False" Script="value" ScriptWorkMode="List" Type="PythonTF" />
+      <Children Column="tags" Enabled="True" Group="Transformer" IsMultiYield="False" NewColumn="" ObjectID="删除该列_tags_10" OneOutput="False" Type="DeleteTF" />
+    </Children>
+    <Children Description="任务描述" IsMultiData="List" IsSuperMode="False" Name="网页采集器" RootFormat="XPath" RootXPath="" ScriptPath="" ShareCookie="" Type="SmartCrawler" URL="www.cnblogs.com">
+      <HttpSet Allowautoredirect="True" Encoding="Unknown" Method="GET" Parameters="User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36&#xA;" Postdata="" URL="" />
+    </Children>
+    <Children __KeppOrder="True" Children="System.Collections.Generic.List`1[Hawk.Core.Utils.Plugins.FreeDocument]" DelayTime="0" Description="任务描述" GenerateMode="SerialMode" MaxThreadCount="5" Name="全部抓取" SampleMount="20" ScriptPath="" Type="SmartETLTool">
+      <Children Column="id" Enabled="True" Group="Generator" Interval="1" MaxValue="1467" MergeType="Cross" MinValue="1400" ObjectID="生成区间数_id_1" Type="RangeGE" />
+      <Children Column="id" Enabled="True" ETLRange="1:300" ETLSelector="栏目抓取" Group="Transformer" IsCycle="False" IsManyData="List" MappingSet="id:scene" NewColumn="" ObjectID="子任务-转换_id_2" Type="EtlTF" />
+      <Children Column="authorName" Enabled="True" Group="Executor" ObjectID="写入数据表_authorName_3" Table="数据表" Type="TableEX" />
+    </Children>
+  </Doc>
+</root>
